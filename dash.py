@@ -8,7 +8,7 @@ from query import conexao
 
 # *** Primeira Consulta e Atualização
 # * Consulta SQL (É a mesma seleção que é feita no MySQL (sem ;))
-query = 'SELECT * FROM tb_carros'
+query = 'SELECT * FROM tb_carro'
 # Carregar os dados para a var 'df'
 df = conexao(query)
 
@@ -29,6 +29,7 @@ filtro_marca = st.sidebar.multiselect(
 
 # Modelo
 filtro_modelo = st.sidebar.multiselect(
+    "Modelo Selecionada",
     options=df['modelo'].unique(),
     default=df['modelo'].unique()
 )
@@ -110,3 +111,22 @@ def PaginaInicial():
             )
         if exibicao:
             st.write(df_selecionado[exibicao])
+
+    if not df_selecionado.empty:
+        total_vendas = df_selecionado["numero_vendas"].sum()
+        media_valor = df_selecionado["valor"].mean()
+        media_vendas = df_selecionado["numero_vendas"].mean()
+
+        card1, card2, card3 = st.columns(3, gap="large")
+        with card1:
+            st.info("Valor Total de Vendas", icon="📊")
+            st.metric(label="Total", value=f"{total_vendas:,.0f}")
+        with card2:
+            st.info("Valor Médio dos Carros", icon="📊")
+            st.metric(label="Média", value=f"{media_valor:,.0f}")
+        with card3:
+            st.info("Média de Vendas", icon="📊")
+            st.metric(label="Média", value=f"{media_vendas:,.0f}")
+
+# streamlit run dash.py
+# python streamlit run dash.py
