@@ -119,14 +119,50 @@ def PaginaInicial():
 
         card1, card2, card3 = st.columns(3, gap="large")
         with card1:
-            st.info("Valor Total de Vendas", icon="📊")
+            st.info("Valor Total de Vendas", icon="📌")
             st.metric(label="Total", value=f"{total_vendas:,.0f}")
         with card2:
-            st.info("Valor Médio dos Carros", icon="📊")
+            st.info("Valor Médio dos Carros", icon="📌")
             st.metric(label="Média", value=f"{media_valor:,.0f}")
         with card3:
-            st.info("Média de Vendas", icon="📊")
+            st.info("Valor Médio de Vendas", icon="📌")
             st.metric(label="Média", value=f"{media_vendas:,.0f}")
+
+    else:
+        st.warning('Nenhum dado disponível com os filtros selecionados')
+        # tracejado divisor na tela
+        st.markdown("""-----""")
+
+# *** Gráficos
+def graficos(df_selecionado):
+    if df_selecionado.empty:
+        st.warning('Nenhum dado disponível para gerar os gráficos')
+        return 
+
+    graf1, graf2, graf3, graf4 = st.tabs(["Gráfico de Barras", "Gráfico de Linhas", "Gráfico de Pizza", "Gráfico de Dispersão"])
+
+    with graf1:
+        st.write("Gráfico de Barras")
+        valor = df_selecionado.groupby("marca").count()[["valor"]].sort_values(by="valor", ascending=True) # ascending = True = Cresc; = False = Decresc
+
+        fig1 = px.bar(
+            valor,
+            x=valor.index,
+            y="valor",
+            orientation="h", # h = horizontal, v = vertical
+            title="Valores de Carros",
+            color_discrete_sequence=["#0083b8"]
+        )
+        st.plotly_chart(fig1, use_container_width=True)
+
+    with graf2:
+        st.write("Gráfico de Linhas")
+    with graf3:
+        st.write("Gráfico de Pizza")
+    with graf4:
+        st.write("Gráfico de Dispersão")
+# ***
+PaginaInicial()
 
 # streamlit run dash.py
 # python streamlit run dash.py
