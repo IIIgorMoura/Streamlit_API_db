@@ -139,7 +139,7 @@ def graficos(df_selecionado):
         st.warning('Nenhum dado disponível para gerar os gráficos')
         return 
 
-    graf1, graf2, graf3, graf4 = st.tabs(["Gráfico de Barras", "Gráfico de Linhas", "Gráfico de Pizza", "Gráfico de Dispersão"])
+    graf1, graf2 = st.tabs(["Gráfico de Barras", "Gráfico de Linhas"]) #, "Gráfico de Pizza", "Gráfico de Dispersão"]
 
     with graf1:
         st.write("Gráfico de Barras")
@@ -155,14 +155,22 @@ def graficos(df_selecionado):
         )
         st.plotly_chart(fig1, use_container_width=True)
 
+
     with graf2:
         st.write("Gráfico de Linhas")
-    with graf3:
-        st.write("Gráfico de Pizza")
-    with graf4:
-        st.write("Gráfico de Dispersão")
+        valor_linhas = df_selecionado.groupby("modelo").count()[["valor"]]
+
+        fig2 = px.line(
+            valor_linhas,
+            x=valor_linhas.index,
+            y="valor",
+            title="Valor por Modelo",
+            color_discrete_sequence=["#0083b8"]
+        )
+        st.plotly_chart(fig2, use_container_width=True)
+
 # ***
 PaginaInicial()
-
+graficos(df_selecionado)
 # streamlit run dash.py
 # python streamlit run dash.py
